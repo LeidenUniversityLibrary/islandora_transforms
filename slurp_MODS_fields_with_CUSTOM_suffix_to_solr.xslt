@@ -6,8 +6,8 @@
   xmlns:xlink="http://www.w3.org/1999/xlink"
      exclude-result-prefixes="mods">
 
-     <!-- Combine the nonsort value and the title value into a custom field -->
-     <xsl:template match="mods:mods/mods:titleInfo" mode="slurp_custom_suffix">
+     <!-- Combine the nonsort value and the title value of the first typeless titleInfo into a custom field -->
+     <xsl:template match="mods:mods/mods:titleInfo[not(@type)][1]" mode="slurp_custom_suffix">
        <xsl:call-template name="mods_custom_suffix">
          <xsl:with-param name="field_name" select="'titleInfo_title_custom'"/>
          <xsl:with-param name="content" select="concat(mods:nonSort, mods:title)"/>
