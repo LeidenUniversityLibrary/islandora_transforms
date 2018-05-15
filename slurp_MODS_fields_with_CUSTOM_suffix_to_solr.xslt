@@ -14,6 +14,39 @@
        </xsl:call-template>
      </xsl:template>
 
+     <!-- Combine the nameparts and years into a custom field -->
+     <xsl:template match="mods:mods/mods:name" mode="slurp_custom_suffix">
+       <xsl:variable name="combinedName">
+         <!-- Loop nameparts that are not of type date -->
+         <xsl:for-each select="mods:namePart[not(@type = 'date')]">
+           <!-- Output the value of the namepart -->
+           <xsl:value-of select="current()"/>
+           <!-- Add a separator if not the last namepart -->
+           <xsl:if test="position() != last()">
+             <xsl:text>, </xsl:text>
+           </xsl:if>
+         </xsl:for-each>
+
+         <!-- Output nameparts of type date within parentheses) -->
+         <xsl:variable name="dateNameParts" select="mods:namePart[@type = 'date']"/>
+         <xsl:if test="count($dateNameParts) > 0">
+           <xsl:text> (</xsl:text>
+           <xsl:for-each select="$dateNameParts">
+             <xsl:value-of select="current()"/>
+             <!-- Add a separator if not the last namepart -->
+             <xsl:if test="position() != last()">
+               <xsl:text>, </xsl:text>
+             </xsl:if>
+           </xsl:for-each>
+           <xsl:text>)</xsl:text>
+         </xsl:if>
+       </xsl:variable>
+       <xsl:call-template name="mods_custom_suffix">
+         <xsl:with-param name="field_name" select="'name_namePart_custom'"/>
+         <xsl:with-param name="content" select="$combinedName"/>
+       </xsl:call-template>
+     </xsl:template>
+
      <!-- Writes a Solr field. -->
      <xsl:template name="mods_custom_suffix">
        <xsl:param name="field_name"/>
