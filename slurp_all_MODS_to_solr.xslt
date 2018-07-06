@@ -32,7 +32,9 @@
       <xsl:with-param name="datastream" select="../@ID"/>
     </xsl:apply-templates>
     <xsl:apply-templates mode="slurp_all_suffix" select="$content//mods:mods[1]"/>
-    <xsl:apply-templates mode="slurp_custom_suffix" select="$content//mods:mods[1]"/>
+    <xsl:apply-templates mode="slurp_titleInfo_title_custom" select="$content//mods:mods[1]"/>
+    <xsl:apply-templates mode="slurp_titleInfo_sortingTitle_custom" select="$content//mods:mods[1]"/>
+    <xsl:apply-templates mode="slurp_name_namePart_custom" select="$content//mods:mods[1]"/>
   </xsl:template>
 
   <!-- Handle dates. -->
