@@ -102,29 +102,39 @@
             <xsl:variable name="nextCharIsnumeric" select="string-length($nextChar) > 0 and string-length(translate($nextChar, '1234567890', '')) = 0"/>
 
             <xsl:if test="not($currentCharIsNumeric)">
+                <!-- current char is not numeric so we output it as is -->
                 <xsl:value-of select="$currentChar"/>
             </xsl:if>
 
             <xsl:if test="$currentCharIsNumeric and not($nextCharIsnumeric)">
-                <!-- next char is not numeric, collect what we have so far -->
-                <xsl:value-of select="format-number(concat($numberStack, $currentChar), $numberFormat)"/>
+                <!-- next char is not numeric, so pad, then output the numberstack -->
+                <xsl:value-of select="format-number(number(concat($numberStack, $currentChar)), $numberFormat)"/>
             </xsl:if>
 
 
-            <!-- add current char to the numberstack if it is a number and the next one is also a number -->
             <xsl:variable name="newNumberStack">
                 <xsl:if test="$currentCharIsNumeric and $nextCharIsnumeric">
+                    <!-- expecting more numbers so add current number to stack -->
                     <xsl:value-of select="concat($numberStack, $currentChar)"/>
                 </xsl:if>
             </xsl:variable>
 
             <!-- recurse into next if there are more characters to process -->
             <xsl:if test="string-length($string) > 1">
-                <xsl:call-template name="padNumbers">
-                    <xsl:with-param name="string" select="substring($string,2)"/>
-                    <xsl:with-param name="numberStack" select="$newNumberStack"/>
-                    <xsl:with-param name="numberFormat" select="$numberFormat"/>
-                </xsl:call-template>
+                <xsl:variable name="remaining" select="substring($string,2)"/>
+                <xsl:variable name="remainingHasNumeric" select="string-length($remaining) > string-length(translate($remaining, '1234567890', ''))"/>
+                <xsl:choose>
+                    <xsl:when test="$remainingHasNumeric or string-length($newNumberStack) > 0">
+                        <xsl:call-template name="padNumbers">
+                            <xsl:with-param name="string" select="$remaining"/>
+                            <xsl:with-param name="numberStack" select="$newNumberStack"/>
+                            <xsl:with-param name="numberFormat" select="$numberFormat"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="$remaining"/>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:if>
 
         </xsl:if>
