@@ -18,15 +18,44 @@
 
      <!--
         Create a sorting title into a custom field
-      -->
+      -->    
      <xsl:template match="mods:mods/mods:titleInfo[not(@type)][1]" mode="slurp_titleInfo_sortingTitle_custom">
+       <xsl:variable name="titleLength" select="string-length(mods:title)"/>
        <xsl:variable name="sortingTitle">
-         <xsl:call-template name="partiallyPadNumbers">
-            <xsl:with-param name="string" select="mods:title"/>
-            <xsl:with-param name="numberFormat" select="'00000'"/>
-            <xsl:with-param name="padUntil" select="'80'"/>
-         </xsl:call-template>
+         <xsl:choose>
+           <xsl:when test="$titleLength &lt;= 40">
+             <!-- Output all (so up to 40) characters with padded numbers -->
+             <xsl:call-template name="padNumbers">
+               <xsl:with-param name="string" select="mods:title"/>
+             </xsl:call-template>
+           </xsl:when>
+           <xsl:otherwise>
+             <!-- Output first 20 characters with padded numbers -->
+             <xsl:call-template name="padNumbers">
+               <xsl:with-param name="string" select="substring(mods:title, 1, 20)"/>
+             </xsl:call-template>
+             
+             <!-- Output characters between the first 20 and the last 20 characters -->
+             <xsl:if test="$titleLength > 40">
+               <xsl:value-of select="substring(mods:title, 21, $titleLength - 40)"/>
+             </xsl:if>
+             
+             <!-- Output last (up to) 20 characters with padded numbers -->
+             <xsl:if test="$titleLength > 20">
+               <xsl:variable name="lastTwentyIndex">
+                 <xsl:choose>
+                   <xsl:when test="$titleLength > 40"><xsl:value-of select="$titleLength - 19"/></xsl:when>
+                   <xsl:otherwise>21</xsl:otherwise>
+                 </xsl:choose>
+               </xsl:variable>
+               <xsl:call-template name="padNumbers">
+                 <xsl:with-param name="string" select="substring(mods:title, $lastTwentyIndex, 20)"/>
+               </xsl:call-template>
+             </xsl:if>
+           </xsl:otherwise>
+         </xsl:choose>
        </xsl:variable>
+       
        <xsl:call-template name="mods_custom_suffix">
          <xsl:with-param name="field_name" select="'titleInfo_sortingTitle_custom'"/>
          <xsl:with-param name="content" select="normalize-space($sortingTitle)"/>
@@ -84,23 +113,6 @@
        </xsl:if>
      </xsl:template>
 
-     <!--
-        Pad all numbers in a string but only in the first X characters
-        example 1: ABCD 12  -> ABCD 00012
-        example 2: A1B2     -> A00001B00002
-        Use the padUntil parameter to choose the amount of characters. Note: higher values might cause a stack overflow.
-     -->
-    <xsl:template name="partiallyPadNumbers">
-        <xsl:param name="string" select="''"/>
-        <xsl:param name="numberFormat" select="'00000'"/>
-        <xsl:param name="padUntil" select="'80'"/>
-        <xsl:call-template name="padNumbers">
-            <xsl:with-param name="string" select="substring($string, 1, $padUntil)"/>
-            <xsl:with-param name="numberFormat" select="$numberFormat"/>
-        </xsl:call-template>
-        <xsl:value-of select="substring($string, $padUntil + 1)"/>
-    </xsl:template>
-
     <!--
        Pad all numbers in a string
        example 1: ABCD 12  -> ABCD 00012
@@ -116,7 +128,6 @@
         <xsl:if test="string-length($string) > 0">
             <xsl:variable name="currentChar" select="substring($string,1,1)"/>
             <xsl:variable name="currentCharIsNumeric" select="string-length(translate($currentChar, '1234567890', '')) = 0"/>
-
             <xsl:variable name="nextChar" select="substring($string,2,1)"/>
             <xsl:variable name="nextCharIsnumeric" select="string-length($nextChar) > 0 and string-length(translate($nextChar, '1234567890', '')) = 0"/>
 
