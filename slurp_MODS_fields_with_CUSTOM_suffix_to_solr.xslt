@@ -113,11 +113,11 @@
          <xsl:with-param name="content" select="concat($typelessNamePartsString, ' (', $dateNamePartsString,')')"/>
        </xsl:call-template>
        
-       <xsl:for-each select="mods:role[@authority = 'marcrelator']">
          <!-- Write name_type_namePart_role_custom -->
+       <xsl:for-each select="mods:role">
          <xsl:variable name="roleString">
            <xsl:choose>
-             <xsl:when test="mods:roleTerm/@type = 'code'">
+             <xsl:when test="mods:roleTerm[@authority = 'marcrelator']/@type = 'code'">
                <xsl:call-template name="get_english_marcrole">
                  <xsl:with-param name="code" select="mods:roleTerm/@type"/>
                </xsl:call-template>
