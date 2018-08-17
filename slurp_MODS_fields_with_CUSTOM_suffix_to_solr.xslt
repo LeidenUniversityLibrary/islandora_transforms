@@ -21,9 +21,10 @@
       -->
      <xsl:template match="mods:mods/mods:titleInfo[not(@type)][1]" mode="slurp_titleInfo_sortingTitle_custom">
        <xsl:variable name="sortingTitle">
-         <xsl:call-template name="padNumbers">
-           <xsl:with-param name="string" select="mods:title"/>
-           <xsl:with-param name="numberFormat" select="'00000'"/>
+         <xsl:call-template name="partiallyPadNumbers">
+            <xsl:with-param name="string" select="mods:title"/>
+            <xsl:with-param name="numberFormat" select="'00000'"/>
+            <xsl:with-param name="padUntil" select="'80'"/>
          </xsl:call-template>
        </xsl:variable>
        <xsl:call-template name="mods_custom_suffix">
@@ -84,11 +85,29 @@
      </xsl:template>
 
      <!--
-        Pad all numbers in a string
+        Pad all numbers in a string but only in the first X characters
         example 1: ABCD 12  -> ABCD 00012
         example 2: A1B2     -> A00001B00002
+        Use the padUntil parameter to choose the amount of characters. Note: higher values might cause a stack overflow.
      -->
-     <xsl:template name="padNumbers">
+    <xsl:template name="partiallyPadNumbers">
+        <xsl:param name="string" select="''"/>
+        <xsl:param name="numberFormat" select="'00000'"/>
+        <xsl:param name="padUntil" select="'80'"/>
+        <xsl:call-template name="padNumbers">
+            <xsl:with-param name="string" select="substring($string, 1, $padUntil)"/>
+            <xsl:with-param name="numberFormat" select="$numberFormat"/>
+        </xsl:call-template>
+        <xsl:value-of select="substring($string, $padUntil + 1)"/>
+    </xsl:template>
+
+    <!--
+       Pad all numbers in a string
+       example 1: ABCD 12  -> ABCD 00012
+       example 2: A1B2     -> A00001B00002
+       Note: longer strings might cause a stack overflow.
+    -->
+    <xsl:template name="padNumbers">
         <xsl:param name="string" select="''"/>
         <xsl:param name="numberFormat" select="'00000'"/>
 
