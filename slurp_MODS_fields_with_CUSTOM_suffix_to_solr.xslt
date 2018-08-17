@@ -88,6 +88,7 @@
          <!-- Output nameparts of type date within parentheses) -->
          <xsl:variable name="dateNameParts" select="mods:namePart[@type = 'date']"/>
          <xsl:if test="count($dateNameParts) > 0">
+           <xsl:text>(</xsl:text>
            <xsl:for-each select="$dateNameParts">
              <xsl:value-of select="current()"/>
              <!-- Add a separator if not the last namepart -->
@@ -95,6 +96,7 @@
                <xsl:text>, </xsl:text>
              </xsl:if>
            </xsl:for-each>
+           <xsl:text>)</xsl:text>
          </xsl:if>
        </xsl:variable>
        
@@ -103,17 +105,16 @@
          <!-- Write name_namePart_custom -->
          <xsl:call-template name="mods_custom_suffix">
            <xsl:with-param name="field_name" select="'name_namePart_custom'"/>
-           <xsl:with-param name="content" select="concat($typelessNamePartsString, ' (', $dateNamePartsString,')')"/>
+           <xsl:with-param name="content" select="normalize-space(concat($typelessNamePartsString, ' ', $dateNamePartsString))"/>
          </xsl:call-template>
        </xsl:if>
        
        <!-- Write name_type_namePart_custom -->
        <xsl:call-template name="mods_custom_suffix">
-         <xsl:with-param name="field_name" select="concat('name_',@type,'namePart_custom')"/>
-         <xsl:with-param name="content" select="concat($typelessNamePartsString, ' (', $dateNamePartsString,')')"/>
+         <xsl:with-param name="field_name" select="concat('name_',@type,'_namePart_custom')"/>
+         <xsl:with-param name="content" select="normalize-space(concat($typelessNamePartsString, ' ', $dateNamePartsString))"/>
        </xsl:call-template>
        
-         <!-- Write name_type_namePart_role_custom -->
        <xsl:for-each select="mods:role">
          <xsl:variable name="roleString">
            <xsl:choose>
@@ -127,9 +128,11 @@
              </xsl:otherwise>
            </xsl:choose>
          </xsl:variable>
+         
+         <!-- Write name_type_namePart_role_custom -->
          <xsl:call-template name="mods_custom_suffix">
-           <xsl:with-param name="field_name" select="concat('name_',@type,'namePart_custom')"/>
-           <xsl:with-param name="content" select="concat($roleString,': ',$typelessNamePartsString, ' (', $dateNamePartsString,')')"/>
+           <xsl:with-param name="field_name" select="concat('name_',@type,'_namePart_custom')"/>
+           <xsl:with-param name="content" select="normalize-space(concat($roleString,': ',$typelessNamePartsString, ' ', $dateNamePartsString))"/>
          </xsl:call-template>
          
        </xsl:for-each>
