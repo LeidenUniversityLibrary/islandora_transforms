@@ -69,7 +69,7 @@
        
        <!-- Nameparts that hold names (no type) separated by commas -->
        <xsl:variable name="typelessNamePartsString">
-         <xsl:variable name="typelessNameParts"/>
+         <xsl:variable name="typelessNameParts" select="mods:namePart[not(@type)]"/>
          <xsl:if test="count($typelessNameParts) > 0">
           <!-- Loop nameparts that are not of type date -->
           <xsl:for-each select="mods:namePart[not(@type = 'date')]">
