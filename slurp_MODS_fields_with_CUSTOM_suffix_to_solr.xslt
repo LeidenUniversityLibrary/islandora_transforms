@@ -126,8 +126,8 @@
             </xsl:if>
 
             <xsl:if test="$currentCharIsNumeric and not($nextCharIsnumeric)">
-                <!-- next char is not numeric, so pad, then output the numberstack -->
-                <xsl:value-of select="format-number(number(concat($numberStack, $currentChar)), $numberFormat)"/>
+              <!-- next char is not numeric, so pad, then output the numberstack -->
+              <xsl:value-of select="concat(substring($numberFormat, 1, string-length($numberFormat) - string-length($numberStack)-1), $numberStack, $currentChar)"/>
             </xsl:if>
 
 
