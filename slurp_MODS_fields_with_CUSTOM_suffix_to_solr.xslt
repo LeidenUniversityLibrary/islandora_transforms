@@ -120,7 +120,7 @@
            <xsl:choose>
              <xsl:when test="mods:roleTerm[@authority = 'marcrelator']/@type = 'code'">
                <xsl:call-template name="get_english_marcrole">
-                 <xsl:with-param name="code" select="mods:roleTerm/@type"/>
+                 <xsl:with-param name="code" select="mods:roleTerm"/>
                </xsl:call-template>
              </xsl:when>
              <xsl:otherwise>
