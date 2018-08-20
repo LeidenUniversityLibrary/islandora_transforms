@@ -151,13 +151,13 @@
            
            <!-- Write name_namePart_[role]Role_custom -->
            <xsl:call-template name="mods_custom_suffix">
-             <xsl:with-param name="field_name" select="concat('name_', $roleString, 'Role_namePart_custom')"/>
+             <xsl:with-param name="field_name" select="concat('name_', translate($roleString, ' ,.', ''), 'Role_namePart_custom')"/>
              <xsl:with-param name="content" select="normalize-space(concat($typelessNamePartsString, ' ', $dateNamePartsString))"/>
            </xsl:call-template>
            
            <!-- Write name_[nametype]_namePart_[role]Role_custom -->
            <xsl:call-template name="mods_custom_suffix">
-             <xsl:with-param name="field_name" select="concat('name_', $currentNode/@type, '_', $roleString, 'Role_namePart_custom')"/>
+             <xsl:with-param name="field_name" select="concat('name_', $currentNode/@type, '_', translate($roleString, ' ,.', ''), 'Role_namePart_custom')"/>
              <xsl:with-param name="content" select="normalize-space(concat($typelessNamePartsString, ' ', $dateNamePartsString))"/>
            </xsl:call-template>
          </xsl:if>
