@@ -66,8 +66,9 @@
         Combine the nameparts, years and roles into several custom fields
       -->
      <xsl:template match="mods:mods/mods:name" mode="slurp_name_namePart_custom">
+       <xsl:variable name="currentNode" select="."/>
        
-       <!-- Nameparts that hold names (no type) separated by commas -->
+       <!-- VARIABLE: Nameparts that hold names (no type) separated by commas -->
        <xsl:variable name="typelessNamePartsString">
          <xsl:variable name="typelessNameParts" select="mods:namePart[not(@type)]"/>
          <xsl:if test="count($typelessNameParts) > 0">
@@ -83,7 +84,7 @@
          </xsl:if>
        </xsl:variable>
        
-       <!-- Nameparts that hold dates separated by commas -->
+       <!-- VARIABLE: Nameparts that hold dates separated by commas -->
        <xsl:variable name="dateNamePartsString">
          <!-- Output nameparts of type date within parentheses) -->
          <xsl:variable name="dateNameParts" select="mods:namePart[@type = 'date']"/>
@@ -100,22 +101,25 @@
          </xsl:if>
        </xsl:variable>
        
-       <xsl:if test="string-length(normalize-space($typelessNamePartsString))">
-         
+       
+       <xsl:if test="string-length(normalize-space(concat($typelessNamePartsString, $dateNamePartsString))) > 0">    
          <!-- Write name_namePart_custom -->
          <xsl:call-template name="mods_custom_suffix">
            <xsl:with-param name="field_name" select="'name_namePart_custom'"/>
            <xsl:with-param name="content" select="normalize-space(concat($typelessNamePartsString, ' ', $dateNamePartsString))"/>
          </xsl:call-template>
+
+         <!-- Write name_[nametype]_namePart_custom -->
+        <xsl:call-template name="mods_custom_suffix">
+          <xsl:with-param name="field_name" select="concat('name_',$currentNode/@type,'_namePart_custom')"/>
+          <xsl:with-param name="content" select="normalize-space(concat($typelessNamePartsString, ' ', $dateNamePartsString))"/>
+        </xsl:call-template>
        </xsl:if>
        
-       <!-- Write name_type_namePart_custom -->
-       <xsl:call-template name="mods_custom_suffix">
-         <xsl:with-param name="field_name" select="concat('name_',@type,'_namePart_custom')"/>
-         <xsl:with-param name="content" select="normalize-space(concat($typelessNamePartsString, ' ', $dateNamePartsString))"/>
-       </xsl:call-template>
        
        <xsl:for-each select="mods:role">
+         
+         <!-- VARIABLE: Roleterm in English -->
          <xsl:variable name="roleString">
            <xsl:choose>
              <xsl:when test="mods:roleTerm[@authority = 'marcrelator']/@type = 'code'">
@@ -124,17 +128,39 @@
                </xsl:call-template>
              </xsl:when>
              <xsl:otherwise>
-               <xsl:value-of select="mods:roleTerm"/>
+               <xsl:call-template name="ucfirst">
+                 <xsl:with-param name="string" select="translate(mods:roleTerm, '.', '')"/>
+               </xsl:call-template>
              </xsl:otherwise>
            </xsl:choose>
          </xsl:variable>
          
-         <!-- Write name_type_namePart_role_custom -->
-         <xsl:call-template name="mods_custom_suffix">
-           <xsl:with-param name="field_name" select="concat('name_',@type,'_namePart_custom')"/>
-           <xsl:with-param name="content" select="normalize-space(concat($roleString,': ',$typelessNamePartsString, ' ', $dateNamePartsString))"/>
-         </xsl:call-template>
          
+         <xsl:if test="string-length(normalize-space(concat($roleString, $typelessNamePartsString, $dateNamePartsString))) > 0">
+           <!-- Write name_namePart_withRolePrefix_custom -->
+           <xsl:call-template name="mods_custom_suffix">
+             <xsl:with-param name="field_name" select="'name_namePart_withRolePrefix_custom'"/>
+             <xsl:with-param name="content" select="normalize-space(concat($roleString,': ', $typelessNamePartsString, ' ', $dateNamePartsString))"/>
+           </xsl:call-template>
+           
+           <!-- Write name_[nametype]_namePart_withRolePrefix_custom -->
+           <xsl:call-template name="mods_custom_suffix">
+             <xsl:with-param name="field_name" select="concat('name_', $currentNode/@type, '_namePart_withRolePrefix_custom')"/>
+             <xsl:with-param name="content" select="normalize-space(concat($roleString,': ', $typelessNamePartsString, ' ', $dateNamePartsString))"/>
+           </xsl:call-template>
+           
+           <!-- Write name_namePart_[role]Role_custom -->
+           <xsl:call-template name="mods_custom_suffix">
+             <xsl:with-param name="field_name" select="concat('name_', $roleString, 'Role_namePart_custom')"/>
+             <xsl:with-param name="content" select="normalize-space(concat($typelessNamePartsString, ' ', $dateNamePartsString))"/>
+           </xsl:call-template>
+           
+           <!-- Write name_[nametype]_namePart_[role]Role_custom -->
+           <xsl:call-template name="mods_custom_suffix">
+             <xsl:with-param name="field_name" select="concat('name_', $currentNode/@type, '_', $roleString, 'Role_namePart_custom')"/>
+             <xsl:with-param name="content" select="normalize-space(concat($typelessNamePartsString, ' ', $dateNamePartsString))"/>
+           </xsl:call-template>
+         </xsl:if>
        </xsl:for-each>
      </xsl:template>
 
@@ -209,5 +235,14 @@
             </xsl:if>
 
         </xsl:if>
+    </xsl:template>
+  
+    <!--
+       Format first character as uppercase
+    -->
+    <xsl:template name="ucfirst">
+      <xsl:param name="string" />
+      <xsl:value-of select="translate(substring($string, 1, 1),'abcdefghijklmnopqrstuvwxyzàèìòùáéíóúýâêîôûãñõäëïöüÿåæœçðø','ABCDEFGHIJKLMNOPQRSTUVWXYZÀÈÌÒÙÁÉÍÓÚÝÂÊÎÔÛÃÑÕÄËÏÖÜŸÅÆŒÇÐØ')" />
+      <xsl:value-of select="substring($string, 2)"/>
     </xsl:template>
 </xsl:stylesheet>
