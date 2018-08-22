@@ -59,6 +59,7 @@
        <xsl:call-template name="mods_custom_suffix">
          <xsl:with-param name="field_name" select="'titleInfo_sortingTitle_custom'"/>
          <xsl:with-param name="content" select="normalize-space($sortingTitle)"/>
+         <xsl:with-param name="fieldSuffix" select="'_ss'"/>
        </xsl:call-template>
      </xsl:template>
 
@@ -170,10 +171,11 @@
      <xsl:template name="mods_custom_suffix">
        <xsl:param name="field_name"/>
        <xsl:param name="content"/>
+       <xsl:param name="fieldSuffix" select="'_ms'"/>
        <xsl:if test="not(normalize-space($content) = '')">
          <field>
            <xsl:attribute name="name">
-             <xsl:value-of select="concat('mods_', $field_name, '_ms')"/>
+             <xsl:value-of select="concat('mods_', $field_name, $fieldSuffix)"/>
            </xsl:attribute>
            <xsl:value-of select="$content"/>
          </field>
