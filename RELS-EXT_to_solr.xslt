@@ -41,7 +41,7 @@
     
     We avoid indexing our compound "quad" relationship, which contains the PID appended after "isSequenceNumberOf".
     -->
-    <xsl:template match="*[normalize-space(.)][self::islandora-rels-ext:isSequenceNumberOf or not(self::islandora-rels-ext:* and starts-with(local-name(), 'isSequenceNumberOf'))]" mode="rels_ext_element">
+    <xsl:template match="*[normalize-space(.)][self::islandora-rels-ext:isSequenceNumberOf or not(self::islandora-rels-ext:* and (starts-with(local-name(), 'isSequenceNumberOf') or starts-with(local-name(), 'isHierarchicalLevelOf')))]" mode="rels_ext_element">
       <xsl:param name="prefix"/>
       <xsl:param name="suffix"/>
 
