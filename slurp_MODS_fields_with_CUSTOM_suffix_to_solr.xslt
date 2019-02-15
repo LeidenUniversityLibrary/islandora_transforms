@@ -107,7 +107,7 @@
          <xsl:if test="count($dateNameParts) > 0">
            <xsl:text>(</xsl:text>
            <xsl:for-each select="$dateNameParts">
-             <xsl:value-of select="current()"/>
+             <xsl:value-of select="normalize-space(current())"/>
              <!-- Add a separator if not the last namepart -->
              <xsl:if test="position() != last()">
                <xsl:text>, </xsl:text>
@@ -118,7 +118,7 @@
        </xsl:variable>
        
        
-       <xsl:if test="string-length(normalize-space(concat($nameNamePartsString, $dateNamePartsString))) > 0">    
+       <xsl:if test="string-length(concat($nameNamePartsString, $dateNamePartsString)) > 0">    
          <!-- Write name_namePart_custom -->
          <xsl:call-template name="mods_custom_suffix">
            <xsl:with-param name="field_name" select="'name_namePart_custom'"/>
@@ -145,14 +145,14 @@
              </xsl:when>
              <xsl:otherwise>
                <xsl:call-template name="ucfirst">
-                 <xsl:with-param name="string" select="translate(mods:roleTerm, '.', '')"/>
+                 <xsl:with-param name="string" select="normalize-space(translate(mods:roleTerm, '.', ''))"/>
                </xsl:call-template>
              </xsl:otherwise>
            </xsl:choose>
          </xsl:variable>
          
          
-         <xsl:if test="string-length(normalize-space(concat($roleString, $nameNamePartsString, $dateNamePartsString))) > 0">
+         <xsl:if test="string-length($roleString) > 0 and string-length($nameNamePartsString) > 0">
            <!-- Write name_namePart_withRolePrefix_custom -->
            <xsl:call-template name="mods_custom_suffix">
              <xsl:with-param name="field_name" select="'name_namePart_withRolePrefix_custom'"/>
