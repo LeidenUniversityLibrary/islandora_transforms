@@ -70,19 +70,34 @@
        <xsl:variable name="currentNode" select="."/>
        
        <!-- VARIABLE: Nameparts that hold names (no type) separated by commas -->
-       <xsl:variable name="typelessNamePartsString">
+       <xsl:variable name="nameNamePartsString">
          <xsl:variable name="typelessNameParts" select="mods:namePart[not(@type)]"/>
-         <xsl:if test="count($typelessNameParts) > 0">
-          <!-- Loop nameparts that are not of type date -->
-          <xsl:for-each select="mods:namePart[not(@type = 'date')]">
-            <!-- Output the value of the namepart -->
-            <xsl:value-of select="current()"/>
-            <!-- Add a separator if not the last namepart -->
-            <xsl:if test="position() != last()">
-              <xsl:text>, </xsl:text>
-            </xsl:if>
-          </xsl:for-each>
-         </xsl:if>
+         <xsl:choose>
+          <xsl:when test="count($typelessNameParts) > 0">
+            <!-- Loop nameparts that are not of type date -->
+            <xsl:for-each select="$typelessNameParts">
+              <!-- Output the value of the namepart -->
+              <xsl:value-of select="current()"/>
+              <!-- Add a separator if not the last namepart -->
+              <xsl:if test="position() != last()">
+                <xsl:text>, </xsl:text>
+              </xsl:if>
+            </xsl:for-each>
+          </xsl:when>
+          <xsl:when test="string-length(mods:namePart[@type='family']) > 0 and string-length(mods:namePart[@type='given']) > 0">
+            <xsl:value-of select="mods:namePart[@type='family']"/>
+             <xsl:text>, </xsl:text>
+            <xsl:value-of select="mods:namePart[@type='given']"/>
+          </xsl:when>
+          <xsl:when test="string-length(mods:namePart[@type='family']) > 0">
+            <xsl:value-of select="mods:namePart[@type='family']"/>
+          </xsl:when>
+          <xsl:when test="string-length(mods:namePart[@type='given']) > 0">
+            <xsl:value-of select="mods:namePart[@type='given']"/>
+          </xsl:when>
+          <xsl:otherwise>
+          </xsl:otherwise>
+         </xsl:choose>
        </xsl:variable>
        
        <!-- VARIABLE: Nameparts that hold dates separated by commas -->
@@ -103,17 +118,17 @@
        </xsl:variable>
        
        
-       <xsl:if test="string-length(normalize-space(concat($typelessNamePartsString, $dateNamePartsString))) > 0">    
+       <xsl:if test="string-length(normalize-space(concat($nameNamePartsString, $dateNamePartsString))) > 0">    
          <!-- Write name_namePart_custom -->
          <xsl:call-template name="mods_custom_suffix">
            <xsl:with-param name="field_name" select="'name_namePart_custom'"/>
-           <xsl:with-param name="content" select="normalize-space(concat($typelessNamePartsString, ' ', $dateNamePartsString))"/>
+           <xsl:with-param name="content" select="normalize-space(concat($nameNamePartsString, ' ', $dateNamePartsString))"/>
          </xsl:call-template>
 
          <!-- Write name_[nametype]_namePart_custom -->
         <xsl:call-template name="mods_custom_suffix">
           <xsl:with-param name="field_name" select="concat('name_',$currentNode/@type,'_namePart_custom')"/>
-          <xsl:with-param name="content" select="normalize-space(concat($typelessNamePartsString, ' ', $dateNamePartsString))"/>
+          <xsl:with-param name="content" select="normalize-space(concat($nameNamePartsString, ' ', $dateNamePartsString))"/>
         </xsl:call-template>
        </xsl:if>
        
@@ -137,29 +152,29 @@
          </xsl:variable>
          
          
-         <xsl:if test="string-length(normalize-space(concat($roleString, $typelessNamePartsString, $dateNamePartsString))) > 0">
+         <xsl:if test="string-length(normalize-space(concat($roleString, $nameNamePartsString, $dateNamePartsString))) > 0">
            <!-- Write name_namePart_withRolePrefix_custom -->
            <xsl:call-template name="mods_custom_suffix">
              <xsl:with-param name="field_name" select="'name_namePart_withRolePrefix_custom'"/>
-             <xsl:with-param name="content" select="normalize-space(concat($roleString,': ', $typelessNamePartsString, ' ', $dateNamePartsString))"/>
+             <xsl:with-param name="content" select="normalize-space(concat($roleString,': ', $nameNamePartsString, ' ', $dateNamePartsString))"/>
            </xsl:call-template>
            
            <!-- Write name_[nametype]_namePart_withRolePrefix_custom -->
            <xsl:call-template name="mods_custom_suffix">
              <xsl:with-param name="field_name" select="concat('name_', $currentNode/@type, '_namePart_withRolePrefix_custom')"/>
-             <xsl:with-param name="content" select="normalize-space(concat($roleString,': ', $typelessNamePartsString, ' ', $dateNamePartsString))"/>
+             <xsl:with-param name="content" select="normalize-space(concat($roleString,': ', $nameNamePartsString, ' ', $dateNamePartsString))"/>
            </xsl:call-template>
            
            <!-- Write name_namePart_[role]Role_custom -->
            <xsl:call-template name="mods_custom_suffix">
              <xsl:with-param name="field_name" select="concat('name_', translate($roleString, ' ,.', ''), 'Role_namePart_custom')"/>
-             <xsl:with-param name="content" select="normalize-space(concat($typelessNamePartsString, ' ', $dateNamePartsString))"/>
+             <xsl:with-param name="content" select="normalize-space(concat($nameNamePartsString, ' ', $dateNamePartsString))"/>
            </xsl:call-template>
            
            <!-- Write name_[nametype]_namePart_[role]Role_custom -->
            <xsl:call-template name="mods_custom_suffix">
              <xsl:with-param name="field_name" select="concat('name_', $currentNode/@type, '_', translate($roleString, ' ,.', ''), 'Role_namePart_custom')"/>
-             <xsl:with-param name="content" select="normalize-space(concat($typelessNamePartsString, ' ', $dateNamePartsString))"/>
+             <xsl:with-param name="content" select="normalize-space(concat($nameNamePartsString, ' ', $dateNamePartsString))"/>
            </xsl:call-template>
          </xsl:if>
        </xsl:for-each>
