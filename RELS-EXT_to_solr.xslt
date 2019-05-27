@@ -24,7 +24,7 @@
         </xsl:apply-templates>
     </xsl:template>
 
-    <!-- Match resources, call underlying template. -->
+    <!-- Match elements, call underlying template. -->
     <xsl:template match="*[@rdf:resource]" mode="rels_ext_element">
       <xsl:param name="prefix"/>
       <xsl:param name="suffix"/>
@@ -36,20 +36,19 @@
         <xsl:with-param name="value" select="@rdf:resource"/>
       </xsl:call-template>
     </xsl:template>
-    
-    <!-- Match relevant literals, call underlying template.
-    
-    We avoid indexing our compound "quad" relationship, which contains the PID appended after "isSequenceNumberOf".
-    -->
-    <xsl:template match="*[normalize-space(.)][self::islandora-rels-ext:isSequenceNumberOf or not(self::islandora-rels-ext:* and (starts-with(local-name(), 'isSequenceNumberOf') or starts-with(local-name(), 'isHierarchicalLevelOf')))]" mode="rels_ext_element">
+    <xsl:template match="*[normalize-space(.)]" mode="rels_ext_element">
       <xsl:param name="prefix"/>
       <xsl:param name="suffix"/>
-      <xsl:call-template name="rels_ext_fields">
-        <xsl:with-param name="prefix" select="$prefix"/>
-        <xsl:with-param name="suffix" select="$suffix"/>
-        <xsl:with-param name="type">literal</xsl:with-param>
-        <xsl:with-param name="value" select="text()"/>
-      </xsl:call-template>
+      <xsl:if test="string($index_compound_sequence) = 'true' or (string($index_compound_sequence) = 'false' and not(self::islandora-rels-ext:* and starts-with(local-name(), 'isSequenceNumberOf')))">
+        <xsl:if test="not(starts-with(local-name(), 'isHierarchicalLevelOf'))">
+          <xsl:call-template name="rels_ext_fields">
+            <xsl:with-param name="prefix" select="$prefix"/>
+            <xsl:with-param name="suffix" select="$suffix"/>
+            <xsl:with-param name="type">literal</xsl:with-param>
+            <xsl:with-param name="value" select="text()"/>
+          </xsl:call-template>
+        </xsl:if>
+      </xsl:if>
     </xsl:template>
 
     <!-- Fork between fields without and with the namespace URI in the field

@@ -42,6 +42,9 @@
             UNION{
               &lt;%PID_URI%&gt; fre:isMemberOf ?obj
             }
+            UNION{
+              &lt;%PID_URI%&gt; fre:isConstituentOf ?obj
+            }
             ?obj fm:state fm:Active .
             &lt;%PID_URI%&gt; fm:state fm:Active
           }
@@ -93,6 +96,9 @@
             }
             UNION{
               ?obj fre:isMemberOf &lt;%PID_URI%&gt;
+            }
+            UNION{
+              ?obj fre:isConstituentOf &lt;%PID_URI%&gt;
             }
             ?obj fm:state fm:Active .
             &lt;%PID_URI%&gt; fm:state fm:Active
