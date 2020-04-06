@@ -181,6 +181,16 @@
      </xsl:template>
 
      <!--
+        Date Issued year.
+      -->
+     <xsl:template match="mods:mods/mods:originInfo/mods:dateIssued[@keyDate='yes'][@encoding='w3cdtf']" mode="slurp_date_issued_year_custom">
+       <xsl:call-template name="mods_custom_suffix">
+         <xsl:with-param name="field_name" select="'originInfo_encoding_w3cdtf_keyDate_yes_dateIssued_year_custom'"/>
+         <xsl:with-param name="content" select="substring-before(text(), '-')"/>
+       </xsl:call-template>
+     </xsl:template>
+
+     <!--
         Writes a Solr field.
       -->
      <xsl:template name="mods_custom_suffix">

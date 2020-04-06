@@ -66,14 +66,15 @@
   <xsl:template name="fulltext_writer">
     <xsl:param name="content"/>
     <xsl:param name="prefix"/>
+    <xsl:param name="field">FULL_TEXT</xsl:param>
     <xsl:param name="suffix">_mt</xsl:param>
     <!-- full_text. -->
-      <field>
-        <xsl:attribute name="name">
-          <xsl:value-of select="concat($prefix, 'FULL_TEXT', $suffix)"/>
-        </xsl:attribute>
-        <xsl:value-of select="$content"/>
-      </field>
+    <field>
+      <xsl:attribute name="name">
+        <xsl:value-of select="concat($prefix, $field, $suffix)"/>
+      </xsl:attribute>
+      <xsl:value-of select="$content"/>
+    </field>
   </xsl:template>
 
 </xsl:stylesheet>

@@ -34,6 +34,7 @@
     <xsl:apply-templates mode="slurp_titleInfo_title_custom" select="$content//mods:mods[1]"/>
     <xsl:apply-templates mode="slurp_titleInfo_sortingTitle_custom" select="$content//mods:mods[1]"/>
     <xsl:apply-templates mode="slurp_name_namePart_custom" select="$content//mods:mods[1]"/>
+    <xsl:apply-templates mode="slurp_date_issued_year_custom" select="$content//mods:mods[1]"/>
   </xsl:template>
 
   <!-- Handle dates. -->
