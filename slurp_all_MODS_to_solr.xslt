@@ -7,7 +7,6 @@
   xmlns:mods="http://www.loc.gov/mods/v3"
   xmlns:xlink="http://www.w3.org/1999/xlink"
      exclude-result-prefixes="mods java">
-  <xsl:include href="/usr/local/fedora/tomcat/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/islandora_transforms/library/xslt-date-template.xslt"/>
   <!-- <xsl:include href="/usr/local/fedora/tomcat/webapps/fedoragsearch/WEB-INF/classes/config/index/FgsIndex/islandora_transforms/manuscript_finding_aid.xslt"/> -->
   <xsl:include href="/usr/local/fedora/tomcat/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/islandora_transforms/manuscript_finding_aid.xslt"/>
   <xsl:include href="/usr/local/fedora/tomcat/webapps/fedoragsearch/WEB-INF/classes/fgsconfigFinal/index/FgsIndex/islandora_transforms/slurp_MODS_fields_with_ALL_suffix_to_solr.xslt"/>
@@ -35,6 +34,7 @@
     <xsl:apply-templates mode="slurp_titleInfo_title_custom" select="$content//mods:mods[1]"/>
     <xsl:apply-templates mode="slurp_titleInfo_sortingTitle_custom" select="$content//mods:mods[1]"/>
     <xsl:apply-templates mode="slurp_name_namePart_custom" select="$content//mods:mods[1]"/>
+    <xsl:apply-templates mode="slurp_date_issued_year_custom" select="$content//mods:mods[1]"/>
   </xsl:template>
 
   <!-- Handle dates. -->
