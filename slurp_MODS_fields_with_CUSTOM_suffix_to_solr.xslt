@@ -12,7 +12,7 @@
      <xsl:template match="mods:mods/mods:titleInfo[not(@type)][1]" mode="slurp_titleInfo_title_custom">
        <xsl:call-template name="mods_custom_suffix">
          <xsl:with-param name="field_name" select="'titleInfo_title_custom'"/>
-         <xsl:with-param name="content" select="concat(mods:nonSort, mods:title)"/>
+         <xsl:with-param name="content" select="normalize-space(concat(normalize-space(mods:nonSort), ' ', normalize-space(mods:title)))"/>
        </xsl:call-template>
      </xsl:template>
 
