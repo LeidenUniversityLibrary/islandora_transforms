@@ -191,6 +191,16 @@
      </xsl:template>
 
      <!--
+        Create index for accessCondition type (except 'use and reproduction')
+      -->
+     <xsl:template match="mods:mods/mods:accessCondition[not(@type = 'use and reproduction')]" mode="slurp_access_condition_custom">
+       <xsl:call-template name="mods_custom_suffix">
+         <xsl:with-param name="field_name" select="'accessCondition_type_custom'"/>
+         <xsl:with-param name="content" select="@type"/>
+       </xsl:call-template>
+     </xsl:template>
+
+     <!--
         Writes a Solr field.
       -->
      <xsl:template name="mods_custom_suffix">
