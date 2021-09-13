@@ -94,13 +94,16 @@
       <xsl:choose>
         <xsl:when
           test="java:add($single_valued_hashset_for_rels_ext, concat($prefix, local-name(), '_', $type, '_s'))">
+          <!-- Remove RELS_EXT_*_s
           <field>
             <xsl:attribute name="name">
               <xsl:value-of select="concat($prefix, local-name(), '_', $type, '_s')"/>
             </xsl:attribute>
             <xsl:value-of select="$value"/>
           </field>
+          -->
           <xsl:choose>
+            <!-- Remove RELS_EXT_*_l
             <xsl:when test="@rdf:datatype = 'http://www.w3.org/2001/XMLSchema#int'">
               <field>
                 <xsl:attribute name="name">
@@ -109,6 +112,8 @@
                 <xsl:value-of select="$value"/>
               </field>
             </xsl:when>
+            -->
+            <!-- Remove RELS_EXT_*_dt
             <xsl:when test="@rdf:datatype = 'http://www.w3.org/2001/XMLSchema#dateTime'">
               <xsl:if test="not(normalize-space($dateValue)='')">
                 <field>
@@ -119,6 +124,8 @@
                 </field>
               </xsl:if>
             </xsl:when>
+            -->
+            <!-- Remove RELS_EXT_*_intDerivedFromString_l
             <xsl:when test="floor($value) = $value">
               <field>
                 <xsl:attribute name="name">
@@ -127,6 +134,7 @@
                 <xsl:value-of select="floor($value)"/>
               </field>
             </xsl:when>
+            -->
           </xsl:choose>
         </xsl:when>
         <xsl:otherwise>
@@ -136,6 +144,7 @@
             </xsl:attribute>
             <xsl:value-of select="$value"/>
           </field>
+          <!-- Remove RELS_EXT_*_mdt
           <xsl:if test="@rdf:datatype = 'http://www.w3.org/2001/XMLSchema#dateTime'">
             <xsl:if test="not(normalize-space($dateValue)='')">
               <field>
@@ -146,6 +155,7 @@
               </field>
             </xsl:if>
           </xsl:if>
+          -->
         </xsl:otherwise>
       </xsl:choose>
     </xsl:template>
