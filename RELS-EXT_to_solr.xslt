@@ -65,12 +65,14 @@
         <xsl:with-param name="type" select="$type"/>
         <xsl:with-param name="value" select="$value"/>
       </xsl:call-template>
+      <!-- Remove RELS-EXT_namespace_*
       <xsl:call-template name="rels_ext_field">
         <xsl:with-param name="prefix" select="concat($prefix, namespace-uri())"/>
         <xsl:with-param name="suffix" select="$suffix"/>
         <xsl:with-param name="type" select="$type"/>
         <xsl:with-param name="value" select="$value"/>
       </xsl:call-template>
+      -->
     </xsl:template>
 
     <!-- Actually create a field. -->
