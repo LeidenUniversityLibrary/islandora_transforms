@@ -81,6 +81,7 @@
           <xsl:value-of select="$textValue"/>
         </field>
       </xsl:if>
+      <!-- Remove MODS_*_s indexes
       <xsl:if test="not(normalize-space($rawTextValue)='')">
         <field>
           <xsl:attribute name="name">
@@ -89,6 +90,7 @@
           <xsl:value-of select="$rawTextValue"/>
         </field>
       </xsl:if>
+      -->
     </xsl:if>
 
     <xsl:if test="not(normalize-space($textValue)='')">
@@ -313,7 +315,8 @@
               does not already exist, that is). -->
             <!-- XXX: We make some assumptions about the schema here...
               Primarily, _s getting copied to the same places as _ms. -->
-            <xsl:when test="$suffix='ms' and java:add($single_valued_hashset, string($prefix))">
+            <!-- Remove MODS_*_s index; $suffix is never 'x_x_x_ms' -->
+            <xsl:when test="$suffix='x_x_x_ms' and java:add($single_valued_hashset, string($prefix))">
               <xsl:value-of select="concat($prefix, 's')"/>
             </xsl:when>
             <xsl:otherwise>
