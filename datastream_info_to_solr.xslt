@@ -41,7 +41,7 @@
           <xsl:value-of select="$id"/>
           <xsl:text>_</xsl:text>
           <xsl:value-of select="local-name()"/>
-          <xsl:value-of select="_s"/>
+          <xsl:text>_s</xsl:text>
         </xsl:attribute>
         <xsl:value-of select="normalize-space(.)"/>
       </field>
@@ -54,7 +54,7 @@
           <xsl:value-of select="$id"/>
           <xsl:text>_</xsl:text>
           <xsl:value-of select="local-name()"/>
-          <xsl:value-of select="_ms"/>
+          <xsl:text>_ms</xsl:text>
         </xsl:attribute>
         <xsl:value-of select="normalize-space(.)"/>
       </field>
