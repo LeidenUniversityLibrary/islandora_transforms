@@ -46,6 +46,19 @@
         <xsl:value-of select="normalize-space(.)"/>
       </field>
       </xsl:if>
+      <xsl:if test="$prefix = 'fedora_datastream_info' and not(local-name() = 'ID' or local-name() = 'FEDORA_URI')">
+      <field>
+        <xsl:attribute name="name">
+          <xsl:value-of select="$prefix"/>
+          <xsl:text>_</xsl:text>
+          <xsl:value-of select="$id"/>
+          <xsl:text>_</xsl:text>
+          <xsl:value-of select="local-name()"/>
+          <xsl:text>_s</xsl:text>
+        </xsl:attribute>
+        <xsl:value-of select="normalize-space(.)"/>
+      </field>
+      </xsl:if>
       <xsl:if test="$prefix = 'fedora_datastream_version'">
       <field>
         <xsl:attribute name="name">
