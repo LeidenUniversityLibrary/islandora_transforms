@@ -59,6 +59,12 @@
           </xsl:attribute>
           <xsl:value-of select="$dateValue"/>
         </field>
+        <field>
+          <xsl:attribute name="name">
+            <xsl:value-of select="concat($prefix, 'mods_originInfo_encoding_w3cdtf_type_embargo_dateOther', '_ms')"/>
+          </xsl:attribute>
+          <xsl:value-of select="$dateValue"/>
+        </field>
       </xsl:if>
     </xsl:for-each>
   </xsl:template>
