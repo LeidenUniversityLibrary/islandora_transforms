@@ -110,14 +110,6 @@
         <xsl:value-of select="$textValue"/>
       </field>
     </xsl:if>
-    <xsl:if test="not(normalize-space($rawTextValue)='')">
-      <field>
-        <xsl:attribute name="name">
-          <xsl:value-of select="concat($prefix, local-name(), '_ms')"/>
-        </xsl:attribute>
-        <xsl:value-of select="$rawTextValue"/>
-      </field>
-    </xsl:if>
   </xsl:template>
 
   <!-- Avoid using text alone. -->
