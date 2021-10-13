@@ -65,12 +65,14 @@
         <xsl:with-param name="type" select="$type"/>
         <xsl:with-param name="value" select="$value"/>
       </xsl:call-template>
+      <!-- Remove RELS-EXT_namespace_*
       <xsl:call-template name="rels_ext_field">
         <xsl:with-param name="prefix" select="concat($prefix, namespace-uri())"/>
         <xsl:with-param name="suffix" select="$suffix"/>
         <xsl:with-param name="type" select="$type"/>
         <xsl:with-param name="value" select="$value"/>
       </xsl:call-template>
+      -->
     </xsl:template>
 
     <!-- Actually create a field. -->
@@ -91,6 +93,7 @@
       by tracking things in a HashSet -->
       <!-- The method java.util.HashSet.add will return false when the value is
       already in the set. -->
+      <!-- Remove single valued indices
       <xsl:choose>
         <xsl:when
           test="java:add($single_valued_hashset_for_rels_ext, concat($prefix, local-name(), '_', $type, '_s'))">
@@ -130,6 +133,7 @@
           </xsl:choose>
         </xsl:when>
         <xsl:otherwise>
+        -->
           <field>
             <xsl:attribute name="name">
               <xsl:value-of select="concat($prefix, local-name(), '_', $type, $suffix)"/>
@@ -146,7 +150,9 @@
               </field>
             </xsl:if>
           </xsl:if>
+        <!--
         </xsl:otherwise>
       </xsl:choose>
+        -->
     </xsl:template>
 </xsl:stylesheet>

@@ -15,6 +15,13 @@
       </xsl:attribute>
       <xsl:value-of select="@VALUE"/>
     </field>
+    <!-- Explicitly add fgs_*_s field -->
+    <field>
+      <xsl:attribute name="name">
+        <xsl:value-of select="concat($prefix, substring-after(@NAME,'#'), '_s')"/>
+      </xsl:attribute>
+      <xsl:value-of select="@VALUE"/>
+    </field>
   </xsl:template>
 
   <!-- Index the fedora properties -->

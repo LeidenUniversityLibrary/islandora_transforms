@@ -24,12 +24,15 @@
             already in the set. -->
             <xsl:choose>
             <xsl:when test="java:add($single_valued_hashset_for_rels_int, concat($prefix, local-name(), '_uri_s'))">
+                <!-- Remove RELS_INT_*_uri_s
                 <field>
                     <xsl:attribute name="name">
                         <xsl:value-of select="concat($prefix, local-name(), '_uri_s')"/>
                     </xsl:attribute>
                     <xsl:value-of select="@rdf:resource"/>
                 </field>
+                -->
+                <!-- Remove RELS_INT_*_uri_l
                 <xsl:if test="@rdf:datatype = 'http://www.w3.org/2001/XMLSchema#int'">
                     <field>
                         <xsl:attribute name="name">
@@ -38,6 +41,7 @@
                         <xsl:value-of select="@rdf:resource"/>
                     </field>
                 </xsl:if>
+                -->
             </xsl:when>
             <xsl:otherwise>
             <field>
@@ -65,12 +69,20 @@
             <xsl:choose>
             <xsl:when
                 test="java:add($single_valued_hashset_for_rels_int, concat($prefix, local-name(), '_literal_s'))">
-                <field>
-                    <xsl:attribute name="name">
-                        <xsl:value-of select="concat($prefix, local-name(), '_literal_s')"/>
-                    </xsl:attribute>
-                    <xsl:value-of select="text()"/>
-                </field>
+               <xsl:if test="@rdf:datatype = 'http://www.w3.org/2001/XMLSchema#int' or local-name() = 'width' or local-name() = 'height'">
+                 <field>
+                   <xsl:attribute name="name">
+                     <xsl:value-of select="concat($prefix, local-name(), '_literal_s')"/>
+                   </xsl:attribute>
+                   <xsl:value-of select="text()"/>
+                 </field>
+                 <field>
+                   <xsl:attribute name="name">
+                     <xsl:value-of select="concat($prefix, local-name(), '_literal_l')"/>
+                   </xsl:attribute>
+                   <xsl:value-of select="text()"/>
+                 </field>
+               </xsl:if>
                <xsl:if test="@rdf:datatype = 'http://www.w3.org/2001/XMLSchema#dateTime'">
                   <xsl:if test="not(normalize-space($dateValue)='')">
                     <field>
@@ -82,7 +94,7 @@
                   </xsl:if>
                 </xsl:if>
               </xsl:when>
-              <xsl:otherwise>
+              <xsl:when test="not(local-name() = 'isViewableByRole' or local-name() = 'isViewableByUser')">
                 <field>
                   <xsl:attribute name="name">
                     <xsl:value-of select="concat($prefix, local-name(), '_literal', $suffix)"/>
@@ -100,17 +112,17 @@
                       </field>
                     </xsl:if>
                   </xsl:when>
-                  <xsl:when test="@rdf:datatype = 'http://www.w3.org/2001/XMLSchema#int'">
-                    <field>
-                      <xsl:attribute name="name">
-                        <xsl:value-of select="concat($prefix, local-name(), '_literal_l')"/>
-                      </xsl:attribute>
-                      <xsl:value-of select="text()"/>
-                    </field>
-                  </xsl:when>
                 </xsl:choose>
-              </xsl:otherwise>
+              </xsl:when>
             </xsl:choose>
+            <xsl:if test="local-name() = 'isViewableByRole' or local-name() = 'isViewableByUser'">
+              <field>
+                <xsl:attribute name="name">
+                  <xsl:value-of select="concat($prefix, local-name(), '_literal', '_ms')"/>
+                </xsl:attribute>
+                <xsl:value-of select="text()"/>
+              </field>
+            </xsl:if>
         </xsl:for-each>
     </xsl:template>
 

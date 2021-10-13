@@ -33,6 +33,33 @@
     <xsl:param name="prefix">fedora_datastream_version</xsl:param>
 
     <xsl:for-each select="$element/@*">
+      <xsl:if test="$prefix = 'fedora_datastream_latest'">
+      <field>
+        <xsl:attribute name="name">
+          <xsl:value-of select="$prefix"/>
+          <xsl:text>_</xsl:text>
+          <xsl:value-of select="$id"/>
+          <xsl:text>_</xsl:text>
+          <xsl:value-of select="local-name()"/>
+          <xsl:text>_s</xsl:text>
+        </xsl:attribute>
+        <xsl:value-of select="normalize-space(.)"/>
+      </field>
+      </xsl:if>
+      <xsl:if test="$prefix = 'fedora_datastream_info' and not(local-name() = 'ID' or local-name() = 'FEDORA_URI')">
+      <field>
+        <xsl:attribute name="name">
+          <xsl:value-of select="$prefix"/>
+          <xsl:text>_</xsl:text>
+          <xsl:value-of select="$id"/>
+          <xsl:text>_</xsl:text>
+          <xsl:value-of select="local-name()"/>
+          <xsl:text>_s</xsl:text>
+        </xsl:attribute>
+        <xsl:value-of select="normalize-space(.)"/>
+      </field>
+      </xsl:if>
+      <xsl:if test="$prefix = 'fedora_datastream_version'">
       <field>
         <xsl:attribute name="name">
           <xsl:value-of select="$prefix"/>
@@ -44,6 +71,49 @@
         </xsl:attribute>
         <xsl:value-of select="normalize-space(.)"/>
       </field>
+      </xsl:if>
+      <!-- Add index fedora_datastream_latest_*_CREATED_dt -->
+      <xsl:if test="local-name() = 'CREATED' and $prefix = 'fedora_datastream_latest'">
+      <field>
+        <xsl:attribute name="name">
+          <xsl:value-of select="$prefix"/>
+          <xsl:text>_</xsl:text>
+          <xsl:value-of select="$id"/>
+          <xsl:text>_</xsl:text>
+          <xsl:value-of select="local-name()"/>
+          <xsl:text>_dt</xsl:text>
+        </xsl:attribute>
+        <xsl:value-of select="normalize-space(.)"/>
+      </field>
+      </xsl:if>
+      <!-- Add index fedora_datastream_version_*_CREATED_mdt -->
+      <xsl:if test="local-name() = 'CREATED' and $prefix = 'fedora_datastream_version'">
+      <field>
+        <xsl:attribute name="name">
+          <xsl:value-of select="$prefix"/>
+          <xsl:text>_</xsl:text>
+          <xsl:value-of select="$id"/>
+          <xsl:text>_</xsl:text>
+          <xsl:value-of select="local-name()"/>
+          <xsl:text>_mdt</xsl:text>
+        </xsl:attribute>
+        <xsl:value-of select="normalize-space(.)"/>
+      </field>
+      </xsl:if>
+      <!-- Add index fedora_datastream_latest_*_SIZE_l -->
+      <xsl:if test="local-name() = 'SIZE' and $prefix = 'fedora_datastream_latest'">
+      <field>
+        <xsl:attribute name="name">
+          <xsl:value-of select="$prefix"/>
+          <xsl:text>_</xsl:text>
+          <xsl:value-of select="$id"/>
+          <xsl:text>_</xsl:text>
+          <xsl:value-of select="local-name()"/>
+          <xsl:text>_l</xsl:text>
+        </xsl:attribute>
+        <xsl:value-of select="normalize-space(.)"/>
+      </field>
+      </xsl:if>
     </xsl:for-each>
   </xsl:template>
 

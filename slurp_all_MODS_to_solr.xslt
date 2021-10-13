@@ -81,10 +81,21 @@
           <xsl:value-of select="$textValue"/>
         </field>
       </xsl:if>
+      <!-- Remove MODS_*_s indexes
       <xsl:if test="not(normalize-space($rawTextValue)='')">
         <field>
           <xsl:attribute name="name">
             <xsl:value-of select="concat($field_name, '_s')"/>
+          </xsl:attribute>
+          <xsl:value-of select="$rawTextValue"/>
+        </field>
+      </xsl:if>
+      -->
+      <!-- Add MODS_*_ss indexes -->
+      <xsl:if test="not(normalize-space($rawTextValue)='')">
+        <field>
+          <xsl:attribute name="name">
+            <xsl:value-of select="concat($field_name, '_ss')"/>
           </xsl:attribute>
           <xsl:value-of select="$rawTextValue"/>
         </field>
@@ -97,14 +108,6 @@
           <xsl:value-of select="concat($prefix, local-name(), '_mdt')"/>
         </xsl:attribute>
         <xsl:value-of select="$textValue"/>
-      </field>
-    </xsl:if>
-    <xsl:if test="not(normalize-space($rawTextValue)='')">
-      <field>
-        <xsl:attribute name="name">
-          <xsl:value-of select="concat($prefix, local-name(), '_ms')"/>
-        </xsl:attribute>
-        <xsl:value-of select="$rawTextValue"/>
       </field>
     </xsl:if>
   </xsl:template>
@@ -306,20 +309,22 @@
     <xsl:param name="node" select="current()"/>
 
     <xsl:if test="$value">
+      <!-- Try to create a single-valued version of each field (if one
+        does not already exist, that is). -->
+      <!-- XXX: We make some assumptions about the schema here...
+        Primarily, _s getting copied to the same places as _ms. -->
+      <!-- Remove MODS_*_s index, replace by MODS_*_ss -->
+      <xsl:if test="$suffix='ms' and java:add($single_valued_hashset, string($prefix))">
+        <field>
+          <xsl:attribute name="name">
+            <xsl:value-of select="concat($prefix, 'ss')"/>
+          </xsl:attribute>
+          <xsl:value-of select="$value"/>
+        </field>
+      </xsl:if>
       <field>
         <xsl:attribute name="name">
-          <xsl:choose>
-            <!-- Try to create a single-valued version of each field (if one
-              does not already exist, that is). -->
-            <!-- XXX: We make some assumptions about the schema here...
-              Primarily, _s getting copied to the same places as _ms. -->
-            <xsl:when test="$suffix='ms' and java:add($single_valued_hashset, string($prefix))">
-              <xsl:value-of select="concat($prefix, 's')"/>
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="concat($prefix, $suffix)"/>
-            </xsl:otherwise>
-          </xsl:choose>
+          <xsl:value-of select="concat($prefix, $suffix)"/>
         </xsl:attribute>
         <xsl:value-of select="$value"/>
       </field>
