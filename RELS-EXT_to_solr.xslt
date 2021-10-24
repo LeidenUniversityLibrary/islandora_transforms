@@ -83,11 +83,13 @@
       <xsl:param name="value"/>
 
     <xsl:variable name="dateValue">
+      <xsl:if test="@rdf:datatype = 'http://www.w3.org/2001/XMLSchema#dateTime'">
       <xsl:call-template name="get_ISO8601_date">
         <xsl:with-param name="date" select="$value"/>
         <xsl:with-param name="pid" select="$PID"/>
         <xsl:with-param name="datastream" select="'RELS-EXT'"/>
       </xsl:call-template>
+      </xsl:if>
     </xsl:variable>
       <!-- Prevent multiple generating multiple instances of single-valued fields
       by tracking things in a HashSet -->
