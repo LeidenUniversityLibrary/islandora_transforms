@@ -105,7 +105,7 @@
     <xsl:if test="not(normalize-space($textValue)='')">
       <field>
         <xsl:attribute name="name">
-          <xsl:value-of select="concat($prefix, local-name(), '_mdt')"/>
+          <xsl:value-of select="concat($field_name, '_mdt')"/>
         </xsl:attribute>
         <xsl:value-of select="$textValue"/>
       </field>
@@ -113,7 +113,7 @@
     <xsl:if test="not(normalize-space($rawTextValue)='')">
       <field>
         <xsl:attribute name="name">
-          <xsl:value-of select="concat($prefix, local-name(), '_ms')"/>
+          <xsl:value-of select="concat($field_name, '_ms')"/>
         </xsl:attribute>
         <xsl:value-of select="$rawTextValue"/>
       </field>
